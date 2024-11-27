@@ -32,7 +32,7 @@ jobs:
           poetry run pytest
 
       - name: Prepare version bump
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/develop'
         id: bump_version
         run: |
           # Get the current and new version
@@ -52,14 +52,14 @@ jobs:
           fi
 
       - name: Push changes
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/develop'
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add pyproject.toml azdocgen/__init__.py README.md
           git commit -m "Bump version to $NEW_VERSION and update badge"
           git tag v$NEW_VERSION
-          git push origin main --tags
+          git push origin develop --tags
 
       - name: Build package
         run: poetry build && ls dist/
