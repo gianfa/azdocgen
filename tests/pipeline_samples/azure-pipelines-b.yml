@@ -1,0 +1,86 @@
+# @title: Pipeline B
+# @description: Here a simple pipeline is presented,
+#   made of many features. The two stages are very relevant here.
+# @version: 0.2.1
+
+# Trigger: Automatically triggers pipeline on main branch and specific tags
+trigger:
+  branches:
+    include:
+      - main
+  tags:
+    include:
+      - "v*"
+    exclude:
+      - "beta*"
+
+# Resources: External repositories, containers, and pipelines
+resources:
+  repositories:
+    - repository: shared-templates
+      type: git
+      name: my-org/shared-templates
+      ref: refs/heads/main
+    - repository: microservice-repo
+      type: git
+      name: my-org/microservice
+      ref: refs/heads/develop
+
+  containers:
+    - container: my-docker-container
+      image: myregistry.azurecr.io/my-image:latest
+
+  pipelines:
+    - pipeline: dependency-pipeline
+      source: my-org/dependency-project
+      trigger: true
+
+# Stages: Build and Test stages
+stages:
+  - stage: BuildStage
+    displayName: "Build Stage"
+    jobs:
+      - job: BuildApp
+        displayName: "Build the Application"
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - script: echo "Fetching templates from shared repository..."
+          - checkout: shared-templates
+          - script: |
+              echo "Building the application"
+              npm install
+              npm run build
+            displayName: "Install and Build"
+
+      - job: BuildMicroservice
+        displayName: "Build Microservice"
+        dependsOn: BuildApp
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - checkout: microservice-repo
+          - script: |
+              echo "Building microservice"
+              mvn clean package
+            displayName: "Build Microservice"
+
+  - stage: TestStage
+    displayName: "Test Stage"
+    dependsOn: BuildStage
+    jobs:
+      - job: UnitTests
+        displayName: "Run Unit Tests"
+        steps:
+          - script: |
+              echo "Running Unit Tests"
+              npm test
+            displayName: "Unit Tests"
+
+      - job: IntegrationTests
+        displayName: "Run Integration Tests"
+        steps:
+          - script: |
+              echo "Running Integration Tests"
+              ./run-integration-tests.sh
+            displayName: "Integration Tests"

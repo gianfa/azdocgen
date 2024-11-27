@@ -1,0 +1,49 @@
+[tool.poetry]
+name = "azdocgen"
+version = "0.1.0"
+description = "A simple Azure Pipeline documentation generator"
+authors = ["gianfaProm <gianfrancesco.angelini@prometeia.com>"]
+readme = "README.md"
+license = "MIT"
+packages = [
+    { include = "azdocgen" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pyyaml = "^6.0.2"
+click = "^8.1.7"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+pytest-mock = "^3.14.0"
+black = "^24.10.0"
+flake8 = "^7.1.1"
+mypy = "^1.13.0"
+twine = "^5.1.1"
+isort = "^5.13.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ["py38", "py39", "py310", "py311"]
+
+[tool.flake8]
+max-line-length = 88
+exclude = ["tests/*", ".venv/*"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = [
+    "tests"
+]
+
+[tool.poetry.extras]
+docs = ["mermaid-cli"]
+
+[tool.poetry.scripts]
+azdocgen = "azdocgen.cli:cli"
