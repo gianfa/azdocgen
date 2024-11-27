@@ -1,0 +1,25 @@
+trigger:
+  branches:
+    include:
+      - main
+
+variables:
+  - name: DEPLOY_ENV
+    value: "staging"
+
+stages:
+  - stage: DeployStage
+    displayName: "Deploy Stage"
+    dependsOn: []
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
+    jobs:
+      - job: DeployToStaging
+        displayName: "Deploy to Staging"
+        condition: eq(variables['DEPLOY_ENV'], 'staging')
+        steps:
+          - script: echo "Deploying to Staging"
+      - job: DeployToProd
+        displayName: "Deploy to Production"
+        condition: eq(variables['DEPLOY_ENV'], 'production')
+        steps:
+          - script: echo "Deploying to Production"

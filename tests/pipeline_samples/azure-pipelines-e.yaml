@@ -1,0 +1,60 @@
+trigger:
+  branches:
+    include:
+      - main
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: my-org/templates
+
+stages:
+  - stage: BuildStage
+    displayName: "Build Stage"
+    condition: succeeded()
+    jobs:
+      - job: BuildApp
+        displayName: "Build the Application"
+        pool:
+          vmImage: "ubuntu-latest"
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+        steps:
+          - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+              - template: templates/build-app.yml
+          - ${{ if ne(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+              - template: templates/publish-app.yml
+          - bash: echo "this is some code"
+            condition: or(always(), eq(variables['isHotfix'], true))
+          - bash: echo "this is another code"
+            displayName: "Conditional Step"
+            condition: eq(variables['Build.Reason'], 'Manual')
+      - job: RunTests
+        displayName: "Run Tests"
+        dependsOn: BuildApp
+        pool:
+          vmImage: "ubuntu-latest"
+        condition: or(succeeded(), eq(variables['RunTests.Always'], true))
+        steps:
+          - script: npm test
+            displayName: "Run Unit Tests"
+            condition: eq(variables['Test.Unit.Enabled'], true)
+          - script: npm run integration
+            displayName: "Run Integration Tests"
+            condition: eq(variables['Test.Integration.Enabled'], true)
+
+  - stage: PublishStage
+    displayName: "Publish Stage"
+    dependsOn: BuildStage
+    condition: eq(variables['Publish.Enabled'], true)
+    jobs:
+      - job: PublishArtifacts
+        displayName: "Publish Artifacts"
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - bash: echo "Publishing artifacts..."
+            condition: succeeded()
+          - bash: echo "Skipping due to failure..."
+            displayName: "Conditional Publish"
+            condition: failed()

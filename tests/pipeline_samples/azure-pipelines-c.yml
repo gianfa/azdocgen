@@ -1,0 +1,33 @@
+trigger:
+  branches:
+    include:
+      - main
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: my-org/templates
+
+stages:
+  - stage: BuildStage
+    displayName: "Build Stage"
+    jobs:
+      - job: BuildApp
+        displayName: "Build the Application"
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - template: templates/build-app.yml
+          - template: templates/publish-app.yml
+          - bash: echo "this is some code"
+          - bash: echo "this is some code"
+            displayName: "echo Test code"
+      - job: RunTests
+        displayName: "Run Tests"
+        dependsOn: BuildApp
+        pool:
+          vmImage: "ubuntu-latest"
+        steps:
+          - script: npm test
+            displayName: "Run Unit Tests"
