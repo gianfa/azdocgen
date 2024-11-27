@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "azdocgen"
-version = "0.1.0"
+version = "0.1.1"
 description = "A simple Azure Pipeline documentation generator"
 authors = ["gianfaProm <gianfrancesco.angelini@prometeia.com>"]
 readme = "README.md"
