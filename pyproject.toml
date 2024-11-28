@@ -2,7 +2,7 @@
 name = "azdocgen"
 version = "0.1.2"
 description = "A simple Azure Pipeline documentation generator"
-authors = ["gianfaProm <gianfrancesco.angelini@prometeia.com>"]
+authors = ["gianfa <gian.angelini@hotmail.com>"]
 readme = "README.md"
 license = "MIT"
 packages = [
