@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: check-git-pull
+        name: Check if 'git pull' is needed
+        entry: python .git/hooks/check_git_pull.py
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
