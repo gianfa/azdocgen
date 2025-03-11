@@ -3,7 +3,8 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - "**"
+      - develop
+      - main
   workflow_dispatch:
 
 jobs:
@@ -32,46 +33,43 @@ jobs:
           poetry run pytest
 
       - name: Prepare version bump
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref_name == 'main'
         id: bump_version
         run: |
-          # Get the current and new version
           CURRENT_VERSION="$(poetry version -s)"
           poetry version patch
           NEW_VERSION="$(poetry version -s)"
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
-          # Update __version__ in __init__.py without overwriting the file
           INIT_FILE="azdocgen/__init__.py"
           if grep -q "^__version__" "$INIT_FILE"; then
-            # Update the existing __version__ line
             sed -i "s/^__version__ = .*/__version__ = \"$NEW_VERSION\"/" "$INIT_FILE"
           else
-            # Add __version__ line if not present
             echo "__version__ = \"$NEW_VERSION\"" >> "$INIT_FILE"
           fi
 
       - name: Push changes
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref_name == 'main'
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add pyproject.toml azdocgen/__init__.py README.md
           git commit -m "Bump version to $NEW_VERSION and update badge"
           git tag v$NEW_VERSION
-          git push origin develop --tags
+          git push origin main --tags
 
       - name: Build package
         run: poetry build && ls dist/
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: package-artifacts
           path: dist/
 
   publish:
     needs: prepare
+    if: github.ref_name == 'main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -83,10 +81,6 @@ jobs:
           name: package-artifacts
           path: dist/
 
-      - name: (dbg)| tree
-        run: tree -L 3
-        working-directory: ${{ github.workspace }}
-
       - name: Poetry config
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
@@ -96,7 +90,4 @@ jobs:
           poetry install --with dev
 
       - name: Publish to PyPI
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: poetry run twine upload dist/*
+        run: poetry publish --build
