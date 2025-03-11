@@ -14,7 +14,7 @@ def generate_markdown(
     pipeline_file: str,
     title: str = "Azure Pipeline Documentation",
     badge_version: bool = True,
-    include_mermaid: bool = True,
+    include_workflow: bool = True,
 ) -> None:
     """
     Generates a Markdown documentation file for Azure Pipelines YAML.
@@ -35,7 +35,7 @@ def generate_markdown(
         Path to the Azure Pipelines YAML file.
     title : str
         The title of the documentation file.
-    include_mermaid : bool
+    include_workflow : bool
         Whether to include a Mermaid diagram in the documentation.
     """
     # Extract header tags from the pipeline file
@@ -114,7 +114,7 @@ def generate_markdown(
             f.write("\n")
 
         # Include Mermaid Diagram
-        if include_mermaid:
+        if include_workflow:
             f.write("## Workflow Diagram\n\n")
             mermaid_diagram = generate_mermaid(stages)
             f.write(mermaid_diagram)

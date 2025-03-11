@@ -7,6 +7,19 @@
 
 AZDocGen is a Python-based tool to automatically generate detailed documentation for Azure Pipelines YAML files. It extracts key details, such as *triggers*, *variables*, *resources*, *stages*, *jobs*, *steps*, and *conditions*, and outputs structured Markdown documentation, including Mermaid diagrams for a visual summary of the pipeline.
 
+- [Installation](#installation)
+  - [Using pip](#using-pip)
+  - [Using Poetry](#using-poetry)
+- [Usage](#usage)
+  - [CLI Usage](#cli-usage)
+    - [Example](#example)
+  - [Programmatic Usage](#programmatic-usage)
+    - [Example](#example-1)
+  - [User Guide](#user-guide)
+- [Features](#features)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Installation
 
 You can install AZDocGen via `pip` or `poetry`.
@@ -80,6 +93,10 @@ generate_markdown(
 
 print(f"Documentation written to {output_file}")
 ```
+
+### User Guide
+
+Please see [User Guide](docs/documenting-pipelines.md).
 
 ## Features
 
