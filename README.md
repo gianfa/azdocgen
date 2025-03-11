@@ -1,7 +1,7 @@
 # AZDocGen: Azure Pipelines Documentation Generator 📜🚀
 
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
-![publish workflow](https://github.com/gianfa/azdocgen/actions/workflows/publish.yml/badge.svg?branch=main)
+![cicd workflow](https://github.com/gianfa/azdocgen/actions/workflows/cicd.yml/badge.svg?branch=main)
 [![PyPI version](https://img.shields.io/pypi/v/azdocgen.svg)](https://pypi.org/project/azdocgen/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
