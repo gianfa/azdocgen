@@ -1,4 +1,5 @@
 """CLI interface"""
+
 import click
 import yaml
 
@@ -15,7 +16,10 @@ from azdocgen.variables import parse_variables
 @click.option(
     "--disable",
     multiple=True,
-    type=click.Choice(["triggers", "variables", "stages", "resources", "workflow"], case_sensitive=False),
+    type=click.Choice(
+        ["triggers", "variables", "stages", "resources", "workflow"],
+        case_sensitive=False,
+    ),
     help="Disables specific components (e.g., --disable variables). Can be used multiple times.",
 )
 def cli(yaml_file: str, output_file: str, disable: tuple) -> None:
