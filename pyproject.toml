@@ -13,6 +13,7 @@ packages = [
 python = "^3.9"
 pyyaml = "^6.0.2"
 click = "^8.1.7"
+toml = "^0.10.2"
 
 
 [tool.poetry.group.dev.dependencies]
