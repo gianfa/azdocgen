@@ -58,7 +58,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add pyproject.toml docks/__init__.py README.md
+          git add pyproject.toml $PROJECT_NAME/__init__.py README.md
           git commit -m "Bump version to $NEW_VERSION and update badge"
           git tag v$NEW_VERSION
           git push origin main --tags
