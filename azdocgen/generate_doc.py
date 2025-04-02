@@ -15,6 +15,7 @@ def generate_markdown(
     title: str = "Azure Pipeline Documentation",
     badge_version: bool = True,
     include_workflow: bool = True,
+    parameters: List[Dict[str, Any]] = None,
 ) -> None:
     """
     Generates a Markdown documentation file for Azure Pipelines YAML.
@@ -72,6 +73,16 @@ def generate_markdown(
         if triggers.get("tags", {}).get("exclude"):
             f.write(f"Tags Exclude: {', '.join(triggers['tags']['exclude'])}\n")
         f.write("\n")
+
+         # Parameters
+        if parameters:
+            f.write("## Parameters\n\n")
+            for param in parameters:
+                param_description = (" " + param['displayName']) if param['displayName'] else ""
+                f.write(
+                    f"- `{param['name']}`: (*{param['type']}*). Defaults to `{param['default']}`.{param_description}\n"
+                )
+            f.write("\n")
 
         # Variables
         f.write("## Variables\n\n")
