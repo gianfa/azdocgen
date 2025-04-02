@@ -74,11 +74,13 @@ def generate_markdown(
             f.write(f"Tags Exclude: {', '.join(triggers['tags']['exclude'])}\n")
         f.write("\n")
 
-         # Parameters
+        # Parameters
         if parameters:
             f.write("## Parameters\n\n")
             for param in parameters:
-                param_description = (" " + param['displayName']) if param['displayName'] else ""
+                param_description = (
+                    (" " + param["displayName"]) if param["displayName"] else ""
+                )
                 f.write(
                     f"- `{param['name']}`: (*{param['type']}*). Defaults to `{param['default']}`.{param_description}\n"
                 )

@@ -3,14 +3,14 @@
 import click
 import yaml
 
+from azdocgen import __version__
 from azdocgen.generate_doc import generate_markdown
+from azdocgen.parameters import parse_parameters
 from azdocgen.resources import parse_resources
 from azdocgen.stages import parse_stages
 from azdocgen.triggers import parse_triggers
 from azdocgen.variables import parse_variables
-from azdocgen.parameters import parse_parameters
 
-from azdocgen import __version__
 
 @click.command()
 @click.version_option(version=__version__, prog_name="azdocgen")
@@ -80,7 +80,7 @@ def cli(yaml_file: str, output_file: str, disable: tuple) -> None:
         output_file=output_file,
         pipeline_file=yaml_file,  # Pass the pipeline file path
         include_workflow=workflow,
-        parameters=parameters
+        parameters=parameters,
     )
 
     click.echo(f"Documentation written to {output_file}")
